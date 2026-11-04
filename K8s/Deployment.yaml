@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bakery-deployment
+  labels:
+    app: bakery
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bakery
+  template:
+    metadata:
+      labels:
+        app: bakery
+    spec:
+      containers:
+      - name: bakery-container
+        image: laxmankohar/neighborhood-bakery:latest
+        ports:
+        - containerPort: 8080
+
+        startupProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 10
+          periodSeconds: 10
+
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+
